@@ -1,0 +1,12 @@
+[package]
+name = "can-i-upgrade"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.21", features = ["derive"] }
+miette = { version = "7.2.0", features = ["fancy"] }
+node-semver = "2.1.0"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
+which = "7.0.0"
