@@ -4,6 +4,8 @@ extern crate serde;
 extern crate clap;
 #[macro_use]
 extern crate miette;
+#[macro_use]
+extern crate prettytable;
 
 use clap::Parser;
 use cli::{

@@ -2,6 +2,8 @@ use miette::{Context, IntoDiagnostic};
 use node_semver::{Range, Version};
 use std::path::PathBuf;
 
+use prettytable::Table;
+
 use crate::{
     node::models::PackageJson,
     npm::{find_dependant_packages, show_package_info},
@@ -25,7 +27,7 @@ pub(crate) fn execute(
     let dependant_packages = find_dependant_packages(npm_executable_path, package_name)
         .into_iter()
         .fold(
-            Vec::new() as Vec<(String, String, bool)>,
+            Vec::new() as Vec<(String, String, String, bool)>,
             |mut collected, package| {
                 //Remove self reference
                 if package == package_name {
@@ -45,15 +47,37 @@ pub(crate) fn execute(
 
                 let is_compatible = latest_dependant_range.satisfies(&semver_target_version);
 
-                collected.push((package, latest_dependant_version, is_compatible));
+                collected.push((
+                    package,
+                    package_info.version,
+                    latest_dependant_version,
+                    is_compatible,
+                ));
                 collected
             },
         );
 
-    for (package, latest_dependant_version, is_compatible) in dependant_packages {
-        println!(
-            "{package}:\nLatest Version: {latest_dependant_version}\nUpgrade possible: {is_compatible}\n-----"
-        );
+    // Create the table
+    let mut table = Table::new();
+    // Add Header
+    table.add_row(row![
+        "Package",
+        "Latest Version",
+        "Latest Supported Range",
+        "Supported"
+    ]);
+
+    // Fill the table with data
+    for (package, latest_version, latest_dependant_version, is_compatible) in dependant_packages {
+        table.add_row(row![
+            package,
+            latest_version,
+            latest_dependant_version,
+            is_compatible
+        ]);
     }
+    // Print the table to stdout
+    table.printstd();
+
     Ok(())
 }

@@ -39,7 +39,7 @@ pub(crate) struct ShowPackageInfo {
     maintainers: Vec<String>,
     author: String,
     repository: Repository,
-    version: String,
+    pub(crate) version: String,
     #[serde(rename = "peerDependencies")]
     peer_dependencies: HashMap<String, String>,
     module: Option<String>,
