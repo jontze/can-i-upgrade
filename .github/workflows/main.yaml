@@ -19,3 +19,16 @@ jobs:
     with:
       build: true
       unit-tests: false
+
+  next:
+    name: Release
+    needs:
+      - test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+    uses: jontze/.workflows/.github/workflows/rust_release.yaml@main
+    with:
+      use-deploy-key: true
+    secrets:
+      DEPLOY_KEY: ${{ secrets.CI_TAG_DEPLOY_KEY }}
