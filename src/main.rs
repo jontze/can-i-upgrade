@@ -34,9 +34,13 @@ fn main() -> Result<()> {
         Commands::CheckDep {
             package_name,
             target_version,
-        } => {
-            commands::check_upgrade::execute(&npm_executable_path, &package_name, &target_version)?
-        }
+            ignore,
+        } => commands::check_upgrade::execute(
+            &npm_executable_path,
+            &package_name,
+            &target_version,
+            ignore,
+        )?,
     }
     Ok(())
 }

@@ -26,14 +26,15 @@ Run the executable with the `check-dep` in the working directory of your Node.js
 can-i-upgrade check-dep --help
 Check if you can upgrade the package in your project
 
-Usage: can-i-upgrade check-dep <PACKAGE_NAME> <TARGET_VERSION>
+Usage: can-i-upgrade check-dep [OPTIONS] <PACKAGE_NAME> <TARGET_VERSION>
 
 Arguments:
   <PACKAGE_NAME>    The name of the npm package to check
   <TARGET_VERSION>  Target Version to check compatibility with
 
 Options:
-  -h, --help  Print help
+  -i, --ignore <IGNORE>  Glob patterns to ignore certain dependencies
+  -h, --help             Print help
 ```
 
 ### Example

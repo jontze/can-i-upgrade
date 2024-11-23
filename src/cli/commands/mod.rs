@@ -8,5 +8,8 @@ pub(crate) enum Commands {
         package_name: String,
         /// Target Version to check compatibility with
         target_version: String,
+        /// Glob patterns to ignore certain dependencies
+        #[clap(short = 'i', long = "ignore")]
+        ignore: Vec<String>,
     },
 }
