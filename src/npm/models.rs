@@ -4,9 +4,9 @@ use crate::node::models::Repository;
 
 /// Part of the response from the command
 /// npm ls <package> --json
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub(crate) struct Package {
-    version: String,
+    pub version: String,
     resolved: Option<String>,
     overridden: Option<bool>,
     dependencies: Option<HashMap<String, Package>>,
@@ -22,6 +22,10 @@ pub(crate) struct NpmPackage {
 impl NpmPackage {
     pub(crate) fn dependency_names(&self) -> Vec<String> {
         self.dependencies.keys().cloned().collect()
+    }
+
+    pub(crate) fn get_dependency(&self, name: &str) -> Option<&Package> {
+        self.dependencies.get(name)
     }
 }
 
@@ -43,7 +47,7 @@ pub(crate) struct ShowPackageInfo {
     #[serde(rename = "peerDependencies")]
     peer_dependencies: HashMap<String, String>,
     module: Option<String>,
-    typings: String,
+    typings: Option<String>,
     dependencies: HashMap<String, String>,
     dist: Dist,
 }
@@ -54,6 +58,18 @@ impl ShowPackageInfo {
             return Some(version.to_string());
         }
         None
+    }
+
+    pub(crate) fn get_newer_available_versions(&self, current_version_number: &str) -> Vec<String> {
+        self.versions
+            .iter()
+            .filter(|version| {
+                let version = node_semver::Version::parse(version).unwrap();
+                let current_version = node_semver::Version::parse(current_version_number).unwrap();
+                version > current_version
+            })
+            .map(|version| version.to_owned())
+            .collect()
     }
 }
 
