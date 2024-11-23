@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2024-11-23
+
+### 🚀 Features
+
+- Add option to ignore certain packages via glob pattern
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.3.0
+
 ## [0.2.0] - 2024-11-23
 
 ### 🚀 Features
