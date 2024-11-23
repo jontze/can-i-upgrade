@@ -1,12 +1,12 @@
 use std::{path::PathBuf, process::Command};
 
-use models::ShowPackageInfo;
+use models::{NpmPackage, ShowPackageInfo};
 
 mod models;
 
 /// List packages that depend on the given package in the current project
 /// npm ls <package> --json
-pub(crate) fn find_dependant_packages(npm_path: &PathBuf, package_name: &str) -> Vec<String> {
+pub(crate) fn find_dependant_packages(npm_path: &PathBuf, package_name: &str) -> NpmPackage {
     let output = Command::new(npm_path)
         .arg("ls")
         .arg(package_name)
@@ -15,8 +15,7 @@ pub(crate) fn find_dependant_packages(npm_path: &PathBuf, package_name: &str) ->
         .expect("failed to execute process");
 
     let output = String::from_utf8(output.stdout).unwrap();
-    let packages: models::NpmPackage = serde_json::from_str(&output).unwrap();
-    packages.dependency_names()
+    serde_json::from_str(&output).unwrap()
 }
 
 /// Show Details about the given package
