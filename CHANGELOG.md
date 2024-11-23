@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2024-11-23
+
+### 🚀 Features
+
+- Check all newer versions for compatibility and not only the latest
+
+### 📚 Documentation
+
+- Generate README
+- *(README)* Update example console output
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- Automate releases based on conventional commit history
+- *(version)* Bump version to 0.2.0
+
 ## [0.1.0] - 2024-11-22
 
 ### 🚀 Features
