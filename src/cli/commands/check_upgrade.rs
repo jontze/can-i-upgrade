@@ -74,6 +74,7 @@ pub(crate) fn execute(
     npm_executable_path: &PathBuf,
     package_name: &str,
     target_version: &str,
+    ignore_glob_patterns: Vec<String>,
 ) -> miette::Result<()> {
     let started = Instant::now();
     println!(
@@ -98,8 +99,21 @@ pub(crate) fn execute(
         TRUCK
     );
     let dependant_package_details = find_dependant_packages(npm_executable_path, package_name);
-    let affected_dependency_names = dependant_package_details.dependency_names();
+    let mut affected_dependency_names = dependant_package_details.dependency_names();
 
+    // Filter out ignored dependencies
+    let glob_set = ignore_glob_patterns
+        .iter()
+        .fold(globset::GlobSetBuilder::new(), |mut builder, pattern| {
+            builder.add(globset::Glob::new(pattern).unwrap());
+            builder
+        })
+        .build()
+        .into_diagnostic()
+        .wrap_err("Invalid ignore glob pattern provided")?;
+    affected_dependency_names.retain(|name| !glob_set.is_match(name));
+
+    // Construct Multi Progress Bar to maintain all following progress bars
     let multi_progress_bar = MultiProgress::new();
 
     // Collect details for each dependant package
