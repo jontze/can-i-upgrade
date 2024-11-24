@@ -35,11 +35,13 @@ fn main() -> Result<()> {
             package_name,
             target_version,
             ignore,
+            stable,
         } => commands::check_upgrade::execute(
             &npm_executable_path,
             &package_name,
             &target_version,
             ignore,
+            stable,
         )?,
     }
     Ok(())

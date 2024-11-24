@@ -34,6 +34,7 @@ Arguments:
 
 Options:
   -i, --ignore <IGNORE>  Glob patterns to ignore certain dependencies
+      --stable           Flag to only include stable versions
   -h, --help             Print help
 ```
 
