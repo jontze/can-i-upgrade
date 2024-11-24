@@ -11,5 +11,8 @@ pub(crate) enum Commands {
         /// Glob patterns to ignore certain dependencies
         #[clap(short = 'i', long = "ignore")]
         ignore: Vec<String>,
+        /// Flag to only include stable versions
+        #[clap(long = "stable")]
+        stable: bool,
     },
 }

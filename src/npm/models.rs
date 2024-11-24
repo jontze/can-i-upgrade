@@ -1,3 +1,4 @@
+use node_semver::Version;
 use std::collections::HashMap;
 
 use crate::node::models::Repository;
@@ -60,7 +61,11 @@ impl ShowPackageInfo {
         None
     }
 
-    pub(crate) fn get_newer_available_versions(&self, current_version_number: &str) -> Vec<String> {
+    pub(crate) fn get_newer_available_versions(
+        &self,
+        current_version_number: &str,
+        only_stable: bool,
+    ) -> Vec<Version> {
         self.versions
             .iter()
             .filter(|version| {
@@ -68,7 +73,19 @@ impl ShowPackageInfo {
                 let current_version = node_semver::Version::parse(current_version_number).unwrap();
                 version > current_version
             })
-            .map(|version| version.to_owned())
+            .map(|version| {
+                let Ok(parsed_version) = version.parse::<Version>() else {
+                    panic!("Invalid version: {version}")
+                };
+                parsed_version
+            })
+            .filter(|v| {
+                if only_stable {
+                    !v.is_prerelease()
+                } else {
+                    true
+                }
+            })
             .collect()
     }
 }

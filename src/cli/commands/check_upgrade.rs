@@ -22,13 +22,13 @@ static CROSS_MARK: Emoji<'_, '_> = Emoji("❌ ", "x");
 
 struct DependencyInfo {
     name: String,
-    current_version: String,
-    newer_versions: Vec<String>,
-    newer_compatible_versions: Vec<String>,
+    current_version: Version,
+    newer_versions: Vec<Version>,
+    newer_compatible_versions: Vec<Version>,
 }
 
 impl DependencyInfo {
-    fn new(name: &str, current_version: String, newer_versions: &[String]) -> Self {
+    fn new(name: &str, current_version: Version, newer_versions: &[Version]) -> Self {
         Self {
             name: name.to_owned(),
             current_version,
@@ -38,7 +38,7 @@ impl DependencyInfo {
     }
 
     /// Collects a version that is compatible
-    fn add_compatible_version(&mut self, version: &str) {
+    fn add_compatible_version(&mut self, version: &Version) {
         self.newer_compatible_versions.push(version.to_owned());
     }
 
@@ -65,7 +65,7 @@ impl DependencyInfo {
     }
 
     /// Returns the latest released version
-    fn latest_version(&self) -> Option<&String> {
+    fn latest_version(&self) -> Option<&Version> {
         self.newer_versions.last()
     }
 }
@@ -75,6 +75,7 @@ pub(crate) fn execute(
     package_name: &str,
     target_version: &str,
     ignore_glob_patterns: Vec<String>,
+    stable: bool,
 ) -> miette::Result<()> {
     let started = Instant::now();
     println!(
@@ -142,7 +143,7 @@ pub(crate) fn execute(
                 .unwrap()
                 .version;
             let newer_available_versions =
-                remote_package_details.get_newer_available_versions(current_local_version);
+                remote_package_details.get_newer_available_versions(current_local_version, stable);
 
             // Create the progress bar for the package based on the amount of versions to process
             let progress_bar =
@@ -150,7 +151,7 @@ pub(crate) fn execute(
 
             let mut dependency_info = DependencyInfo::new(
                 &package,
-                current_local_version.to_string(),
+                current_local_version.parse::<Version>().unwrap(),
                 &newer_available_versions,
             );
 
