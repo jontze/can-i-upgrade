@@ -8,10 +8,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use crate::{
-    node::models::PackageJson,
-    npm::{find_dependant_packages, show_package_info},
-};
+use crate::{node::models::PackageJson, npm};
 
 static LOOKING_GLASS: Emoji<'_, '_> = Emoji("🔍  ", "");
 static TRUCK: Emoji<'_, '_> = Emoji("🚚  ", "");
@@ -99,7 +96,8 @@ pub(crate) fn execute(
         style("[2/3]").bold().dim(),
         TRUCK
     );
-    let dependant_package_details = find_dependant_packages(npm_executable_path, package_name);
+    let dependant_package_details =
+        npm::find_dependant_packages(npm_executable_path, package_name)?;
     let mut affected_dependency_names = dependant_package_details.dependency_names();
 
     // Filter out ignored dependencies
@@ -118,76 +116,83 @@ pub(crate) fn execute(
     let multi_progress_bar = MultiProgress::new();
 
     // Collect details for each dependant package
-    let mut dependant_packages = affected_dependency_names.into_iter().fold(
-        Vec::new() as Vec<DependencyInfo>,
-        |mut collected, package| {
-            // Remove self reference
-            if package == package_name {
-                return collected;
-            }
-            // Create the Progress Spinner for the package
-            let spinner_style =
-                ProgressStyle::with_template("{spinner} {msg} [{elapsed}]").unwrap();
-            let spinner = multi_progress_bar.add(
-                ProgressBar::new_spinner()
-                    .with_style(spinner_style)
-                    .with_message(package.clone())
-                    .with_elapsed(Duration::from_secs(1)),
-            );
-            spinner.enable_steady_tick(Duration::from_millis(50));
+    let mut dependant_packages: Vec<DependencyInfo> =
+        affected_dependency_names.into_iter().try_fold(
+            Vec::new() as Vec<DependencyInfo>,
+            |mut collected, package| {
+                // Remove self reference
+                if package == package_name {
+                    return Ok::<Vec<DependencyInfo>, miette::Report>(collected);
+                }
+                // Create the Progress Spinner for the package
+                let spinner_style =
+                    ProgressStyle::with_template("{spinner} {msg} [{elapsed}]").unwrap();
+                let spinner = multi_progress_bar.add(
+                    ProgressBar::new_spinner()
+                        .with_style(spinner_style)
+                        .with_message(package.clone())
+                        .with_elapsed(Duration::from_secs(1)),
+                );
+                spinner.enable_steady_tick(Duration::from_millis(50));
 
-            // Fetch Package Details from Remote
-            let remote_package_details = show_package_info(npm_executable_path, &package);
-            let current_local_version = &dependant_package_details
-                .get_dependency(&package)
-                .unwrap()
-                .version;
-            let newer_available_versions =
-                remote_package_details.get_newer_available_versions(current_local_version, stable);
+                // Fetch Package Details from Remote
+                let remote_package_details = npm::show_package_info(npm_executable_path, &package)?;
+                let current_local_version = &dependant_package_details
+                    .get_dependency(&package)
+                    .unwrap()
+                    .version;
+                let mut newer_available_versions = remote_package_details
+                    .get_newer_available_versions(current_local_version, stable);
+                // Add the current version to the list of newer versions
+                newer_available_versions
+                    .insert(0, current_local_version.parse::<Version>().unwrap());
 
-            // Create the progress bar for the package based on the amount of versions to process
-            let progress_bar =
-                multi_progress_bar.add(ProgressBar::new(newer_available_versions.len() as u64 - 1));
+                // Create the progress bar for the package based on the amount of versions to process
+                let progress_bar =
+                    multi_progress_bar.add(ProgressBar::new(newer_available_versions.len() as u64));
 
-            let mut dependency_info = DependencyInfo::new(
-                &package,
-                current_local_version.parse::<Version>().unwrap(),
-                &newer_available_versions,
-            );
+                let mut dependency_info = DependencyInfo::new(
+                    &package,
+                    current_local_version.parse::<Version>().unwrap(),
+                    &newer_available_versions,
+                );
 
-            // Loop over each version and check if the it's compatible with the desired target version
-            for newer_version in newer_available_versions {
-                spinner.set_message(format!("{package}@{newer_version}"));
-                let remote_package_version_details =
-                    show_package_info(npm_executable_path, &format!("{package}@{newer_version}"));
-
-                let peer_dependency_range = remote_package_version_details
-                    .get_peer_dependency_version(package_name)
-                    .map(|range_str| {
-                        let Ok(range) = range_str.parse::<Range>() else {
-                            panic!("Invalid version range")
-                        };
-                        range
-                    })
+                // Loop over each version and check if the it's compatible with the desired target version
+                for newer_version in newer_available_versions {
+                    spinner.set_message(format!("{package}@{newer_version}"));
+                    let remote_package_version_details = npm::show_package_info(
+                        npm_executable_path,
+                        &format!("{package}@{newer_version}"),
+                    )
                     .unwrap();
 
-                let is_compatible = peer_dependency_range.satisfies(&semver_target_version);
+                    let peer_dependency_range = remote_package_version_details
+                        .get_peer_dependency_version(package_name)
+                        .map(|range_str| {
+                            let Ok(range) = range_str.parse::<Range>() else {
+                                panic!("Invalid version range")
+                            };
+                            range
+                        })
+                        .unwrap();
 
-                if is_compatible {
-                    dependency_info.add_compatible_version(&newer_version);
+                    let is_compatible = peer_dependency_range.satisfies(&semver_target_version);
+
+                    if is_compatible {
+                        dependency_info.add_compatible_version(&newer_version);
+                    }
+                    progress_bar.inc(1);
                 }
-                progress_bar.inc(1);
-            }
 
-            // Clear Progress bar and spinner for the loop
-            progress_bar.finish_and_clear();
-            spinner.finish_and_clear();
+                // Clear Progress bar and spinner for the loop
+                progress_bar.finish_and_clear();
+                spinner.finish_and_clear();
 
-            // Report results of the loop
-            collected.push(dependency_info);
-            collected
-        },
-    );
+                // Report results of the loop
+                collected.push(dependency_info);
+                Ok(collected)
+            },
+        )?;
 
     //progress_bar.finish_and_clear();
     println!(
