@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2024-11-25
+
+### 🐛 Bug Fixes
+
+- Prevent panix when author wasn't defined in npm package metadata
+- Include currently installed version in compatibility check
+- *(npm)* Throw error instead of panic in case of command failure
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.1
+
 ## [0.4.0] - 2024-11-24
 
 ### 🚀 Features
