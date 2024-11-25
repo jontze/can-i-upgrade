@@ -142,12 +142,14 @@ pub(crate) fn execute(
                 .get_dependency(&package)
                 .unwrap()
                 .version;
-            let newer_available_versions =
+            let mut newer_available_versions =
                 remote_package_details.get_newer_available_versions(current_local_version, stable);
+            // Add the current version to the list of newer versions
+            newer_available_versions.insert(0, current_local_version.parse::<Version>().unwrap());
 
             // Create the progress bar for the package based on the amount of versions to process
             let progress_bar =
-                multi_progress_bar.add(ProgressBar::new(newer_available_versions.len() as u64 - 1));
+                multi_progress_bar.add(ProgressBar::new(newer_available_versions.len() as u64));
 
             let mut dependency_info = DependencyInfo::new(
                 &package,
