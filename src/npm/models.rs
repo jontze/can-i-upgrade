@@ -40,7 +40,6 @@ pub(crate) struct ShowPackageInfo {
     description: String,
     dist_tags: Option<DistTags>,
     versions: Vec<String>,
-    time: Time,
     maintainers: Vec<String>,
     author: Option<String>,
     repository: Repository,
@@ -50,7 +49,6 @@ pub(crate) struct ShowPackageInfo {
     module: Option<String>,
     typings: Option<String>,
     dependencies: HashMap<String, String>,
-    dist: Dist,
 }
 
 impl ShowPackageInfo {
@@ -93,43 +91,4 @@ impl ShowPackageInfo {
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct DistTags {
     latest: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct Time {
-    created: String,
-    modified: String,
-    #[serde(flatten)]
-    versions: HashMap<String, String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct Dist {
-    integrity: String,
-    shasum: String,
-    tarball: String,
-    #[serde(rename = "fileCount")]
-    file_count: u32,
-    #[serde(rename = "unpackedSize")]
-    unpacked_size: u64,
-    attestations: Option<Attestations>,
-    signatures: Vec<Signature>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct Attestations {
-    url: String,
-    provenance: Provenance,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct Provenance {
-    #[serde(rename = "predicateType")]
-    predicate_type: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct Signature {
-    keyid: String,
-    sig: String,
 }
