@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.2] - 2024-11-26
+
+### 🐛 Bug Fixes
+
+- *(npm)* Remove not required properties from parsing
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.2
+
 ## [0.4.1] - 2024-11-25
 
 ### 🐛 Bug Fixes
