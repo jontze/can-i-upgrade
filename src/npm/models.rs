@@ -17,16 +17,19 @@ pub(crate) struct Package {
 pub(crate) struct NpmPackage {
     version: String,
     name: String,
-    dependencies: HashMap<String, Package>,
+    dependencies: Option<HashMap<String, Package>>,
 }
 
 impl NpmPackage {
     pub(crate) fn dependency_names(&self) -> Vec<String> {
-        self.dependencies.keys().cloned().collect()
+        self.dependencies
+            .as_ref()
+            .map(|deps| deps.keys().cloned().collect::<Vec<String>>())
+            .unwrap_or(vec![])
     }
 
     pub(crate) fn get_dependency(&self, name: &str) -> Option<&Package> {
-        self.dependencies.get(name)
+        self.dependencies.as_ref().and_then(|deps| deps.get(name))
     }
 }
 
@@ -40,23 +43,23 @@ pub(crate) struct ShowPackageInfo {
     description: String,
     dist_tags: Option<DistTags>,
     versions: Vec<String>,
-    maintainers: Vec<String>,
+    maintainers: Option<Vec<String>>,
     author: Option<String>,
-    repository: Repository,
+    repository: Option<Repository>,
     pub(crate) version: String,
     #[serde(rename = "peerDependencies")]
-    peer_dependencies: HashMap<String, String>,
+    peer_dependencies: Option<HashMap<String, String>>,
     module: Option<String>,
     typings: Option<String>,
-    dependencies: HashMap<String, String>,
+    dependencies: Option<HashMap<String, String>>,
 }
 
 impl ShowPackageInfo {
     pub(crate) fn get_peer_dependency_version(&self, package_name: &str) -> Option<String> {
-        if let Some(version) = self.peer_dependencies.get(package_name) {
-            return Some(version.to_string());
-        }
-        None
+        self.peer_dependencies
+            .as_ref()
+            .and_then(|peer_deps| peer_deps.get(package_name))
+            .map(|version| version.to_string())
     }
 
     pub(crate) fn get_newer_available_versions(
