@@ -4,7 +4,7 @@ version = "0.4.5"
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.5.21", features = ["derive"] }
+clap = { version = "4.5.22", features = ["derive"] }
 console = "0.15.8"
 globset = "0.4.15"
 indicatif = "0.17.9"
