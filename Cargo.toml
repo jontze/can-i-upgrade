@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.5.23", features = ["derive"] }
-console = "0.15.8"
+console = "0.15.10"
 globset = "0.4.15"
 indicatif = "0.17.9"
 miette = { version = "7.4.0", features = ["fancy"] }
