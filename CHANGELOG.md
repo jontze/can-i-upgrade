@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.9] - 2024-12-16
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump console in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.9
+
 ## [0.4.8] - 2024-12-12
 
 ### 🐛 Bug Fixes
