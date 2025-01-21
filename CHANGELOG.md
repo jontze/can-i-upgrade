@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.15] - 2025-01-21
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump serde_json in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.15
+
 ## [0.4.14] - 2025-01-10
 
 ### 🐛 Bug Fixes
