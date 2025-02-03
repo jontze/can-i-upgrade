@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.18] - 2025-02-03
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump miette in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.18
+
 ## [0.4.17] - 2025-01-29
 
 ### 🐛 Bug Fixes
