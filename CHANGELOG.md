@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.21] - 2025-02-08
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump node-semver in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.21
+
 ## [0.4.20] - 2025-02-07
 
 ### 🐛 Bug Fixes
