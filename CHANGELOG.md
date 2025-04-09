@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.32] - 2025-04-09
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump which in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.32
+
 ## [0.4.31] - 2025-04-02
 
 ### 🐛 Bug Fixes
