@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.35] - 2025-04-29
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump miette in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- *(ci)* Upgrade glibc builder to ubuntu 22
+- *(version)* Bump version to 0.4.35
+
+## [0.4.34] - 2025-04-19
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump clap in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.34
+
 ## [0.4.33] - 2025-04-11
 
 ### 🐛 Bug Fixes
