@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.38] - 2025-06-06
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump which from 7.0.3 to 8.0.0
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.38
+
 ## [0.4.37] - 2025-05-28
 
 ### 🐛 Bug Fixes
