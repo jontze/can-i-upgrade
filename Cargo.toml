@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.49", features = ["derive"] }
 console = "0.16.1"
-globset = "0.4.16"
+globset = "0.4.17"
 indicatif = "0.18.0"
 miette = { version = "7.6.0", features = ["fancy"] }
 node-semver = "2.2.0"
