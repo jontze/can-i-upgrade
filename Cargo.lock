@@ -129,7 +129,7 @@ checksum = "5ce89b21cab1437276d2650d57e971f9d548a2d9037cc231abdc0562b97498ce"
 
 [[package]]
 name = "can-i-upgrade"
-version = "0.4.53"
+version = "0.4.54"
 dependencies = [
  "clap",
  "console",
