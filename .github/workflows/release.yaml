@@ -75,7 +75,7 @@ jobs:
           strip ${{ env.BINARY_NAME }}.exe
           7z a ../../../${{ env.BINARY_NAME }}-${{ steps.tag.outputs.name }}-${{ matrix.target }}.zip ${{ env.BINARY_NAME }}.exe
       - name: Upload Archive as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           if-no-files-found: error
           name: ${{ env.BINARY_NAME }}-${{ steps.tag.outputs.name }}-${{ matrix.target }}
