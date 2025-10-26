@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.55] - 2025-10-26
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump globset in the runtime-dependencies group
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+- *(version)* Bump version to 0.4.55
+
 ## [0.4.54] - 2025-10-21
 
 ### 🐛 Bug Fixes
